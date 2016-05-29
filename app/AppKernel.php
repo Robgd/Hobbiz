@@ -38,7 +38,7 @@ class AppKernel extends Kernel
      */
     public function getCacheDir()
     {
-        return $this->isDockerEnvironment() ? '/opt/yoopies/cache/'.$this->environment : parent::getCacheDir();
+        return $this->isDockerEnvironment() ? '/opt/robgd/cache/'.$this->environment : parent::getCacheDir();
     }
 
     /**
@@ -46,7 +46,7 @@ class AppKernel extends Kernel
      */
     public function getLogDir()
     {
-        return $this->isDockerEnvironment() ? '/opt/yoopies/logs/'.$this->environment : parent::getLogDir();
+        return $this->isDockerEnvironment() ? '/opt/robgd/logs/'.$this->environment : parent::getLogDir();
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader)
