@@ -1,3 +1,6 @@
+notifications:
+  slack: hobbiz:4OrqA0wjy4WJIfevRuBitodo
+
 language: php
 php:
   - 5.5
