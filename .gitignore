@@ -14,3 +14,14 @@
 !var/SymfonyRequirements.php
 /vendor/
 /web/bundles/
+
+########
+# Node #
+########
+/node_modules/
+/npm-debug.log
+
+########
+# Bower #
+########
+/bower_components/
