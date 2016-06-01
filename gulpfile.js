@@ -1,21 +1,17 @@
 /** Store all variables dedicated to Hobbiz Project */
 var Hobbiz = {
-    assetsCore: 'src/Yoopies/CoreBundle/Resources/public',
-    assetsAdmin: 'src/Yoopies/AdminBundle/Resources/public',
-    assetsAll: 'src/Yoopies/*/Resources/public',
+    assetsAll: 'src/AppBundle/Resources/public/sass',
     cssWebPath: 'web/css',
     jsWebPath: 'web/js',
-    bowerComponentsPath: 'bower_components/**',
+    bowerComponentsPath: 'app/Resources/Lib/**',
     cssVendor: [
-        'app/resources/lib/bootstrap/dist/css/bootstrap.min.css'
+        'app/resources/lib/bootstrap/dist/css/bootstrap.css'
     ],
-    jsVendorHead: [
+    jsVendorHeader: [
         'bower_components/respond/dest/respond.min.js',
         'app/Resources/public/js/modernizr.js'
     ],
-    jsVendor: [
-    ],
-    jsMain: [
+    jsVendorFooter: [
     ],
     parametersPath: 'app/config/parameters.yml'
 };
@@ -39,8 +35,9 @@ var gulp = require('gulp'),
     isProduction = yargv.env === 'prod',
     readYml = require('read-yaml'),
     concat = require('gulp-concat'),
-    sourcemaps = require('gulp-sourcemaps');
-    path       = require('path');
+    sourcemaps = require('gulp-sourcemaps'),
+    path       = require('path')
+;
 
 /**
  * Gulp Tasks
@@ -52,36 +49,33 @@ gulp.task('installAssets', shell.task([
 ]));
 
 gulp.task('bower:clean', function() {
-    return gulp.src(Yoopies.bowerWebPath)
+    return gulp.src(Hobbiz.bowerWebPath)
         .pipe(clean());
 });
 
 gulp.task('bower', ['bower:clean'], function() {
-    return gulp.src(Yoopies.bowerLibs, {cwd : Yoopies.bowerComponentsPath})
+    return gulp.src(Hobbiz.bowerLibs, {cwd : Hobbiz.bowerComponentsPath})
         .pipe(plumber())
-        .pipe(gulp.dest(Yoopies.bowerWebPath));
+        .pipe(gulp.dest(Hobbiz.bowerWebPath));
 });
 
-/** Replace @import in files then apply less filter and minify CSS if we're running gulp with (--env prod) */
-gulp.task('stylesheet', function() {
-    var config = readYml.sync(Yoopies.parametersPath);
+/** Replace @import in files then apply sass filter and minify CSS if we're running gulp with (--env prod) */
+gulp.task('stylesheet:main', function() {
+    var config = readYml.sync(Hobbiz.parametersPath);
 
-    return gulp.src([
-        Yoopies.cssWebPath+'/**/*.css',
-        '!'+Yoopies.cssWebPath+'/vendor.css'
-    ])
+    return gulp.src(Hobbiz.assetsAll+'/**/*.scss')
         .pipe(plumber())
-        .pipe(regex_replace({regex: '@import "', replace: '@import "bower_components/bootstrap/less/'}))
-        .pipe(regex_replace({regex: '@importGulpYoopies "', replace: '@import "src/Yoopies/CoreBundle/Resources/public/less/desktopv3/'}))
-        .pipe(regex_replace({regex: '@importGulpBootstrap "', replace: '@import "bower_components/bootstrap/less/'}))
-        .pipe(less())
-        .pipe(regex_replace({regex: 'https://static.yoopies.com', replace: config.parameters.liip_assets}))
+        .pipe(sass())
+        .pipe(gulpif(!isProduction, sourcemaps.init()))
+        .pipe(concat('main.css'))
+        //.pipe(regex_replace({regex: 'https://static.yoopies.com', replace: config.parameters.liip_assets}))
         .pipe(gulpif(isProduction, minifyCSS()))
-        .pipe(gulp.dest(Yoopies.cssWebPath))
+        .pipe(gulpif(!isProduction, sourcemaps.write('./')))
+        .pipe(gulp.dest(Hobbiz.cssWebPath))
         .on('end', function() {
             gutil.beep();
         })
-        ;
+    ;
 });
 
 gulp.task('stylesheet:vendor', function() {
@@ -94,61 +88,35 @@ gulp.task('stylesheet:vendor', function() {
         .pipe(gulp.dest(Hobbiz.cssWebPath));
 });
 
-// gulp.task('stylesheet:vendor', function() {
-//     return gulp.src(Hobbiz.sassVendor)
-//         .pipe(plumber())
-//         .pipe(sass({
-//             paths: [ path.join(__dirname, 'sass', 'includes') ]
-//         }))
-//         .pipe(sass().on('error', sass.logError))
-//         .pipe(gulpif(!isProduction, sourcemaps.init()))
-//         .pipe(concat('vendor.css'))
-//         .pipe(gulpif(isProduction, minifyCSS()))
-//         .pipe(gulpif(!isProduction, sourcemaps.write('./')))
-//         .pipe(gulp.dest(Hobbiz.cssWebPath));
-// });
-
 /** Minify JS if we're running gulp with (--env prod) */
-gulp.task('javascript', function() {
-    return gulp.src([
-        Yoopies.jsWebPath+'/**/*.js',
-        '!'+Yoopies.jsWebPath+'/vendor.js',
-        '!'+Yoopies.jsWebPath+'/vendor-head.js',
-        '!'+Yoopies.jsWebPath+'/main.js'
-    ])
-        .pipe(plumber())
-        .pipe(gulpif(isProduction, uglify()))
-        .pipe(gulp.dest(Yoopies.jsWebPath));
-});
-
 gulp.task('javascript:main', function() {
-    return gulp.src(Yoopies.jsMain)
+    return gulp.src(Hobbiz.jsMain)
         .pipe(plumber())
         .pipe(gulpif(!isProduction, sourcemaps.init()))
         .pipe(concat('main.js'))
         .pipe(gulpif(isProduction, uglify()))
         .pipe(gulpif(!isProduction, sourcemaps.write('./')))
-        .pipe(gulp.dest(Yoopies.jsWebPath));
+        .pipe(gulp.dest(Hobbiz.jsWebPath));
 });
 
-gulp.task('javascript:vendor', function() {
-    return gulp.src(Yoopies.jsVendor)
+gulp.task('javascript:vendorFooter', function() {
+    return gulp.src(Hobbiz.jsVendor)
         .pipe(plumber())
         .pipe(gulpif(!isProduction, sourcemaps.init()))
-        .pipe(concat('vendor.js'))
+        .pipe(concat('vendor-footer.js'))
         .pipe(gulpif(isProduction, uglify()))
         .pipe(gulpif(!isProduction, sourcemaps.write('./')))
-        .pipe(gulp.dest(Yoopies.jsWebPath));
+        .pipe(gulp.dest(Hobbiz.jsWebPath));
 });
 
-gulp.task('javascript:vendorhead', function() {
-    return gulp.src(Yoopies.jsVendorHead)
+gulp.task('javascript:vendorHeader', function() {
+    return gulp.src(Hobbiz.jsVendorHead)
         .pipe(plumber())
         .pipe(gulpif(!isProduction, sourcemaps.init()))
-        .pipe(concat('vendor-head.js'))
+        .pipe(concat('vendor-header.js'))
         .pipe(gulpif(isProduction, uglify()))
         .pipe(gulpif(!isProduction, sourcemaps.write('./')))
-        .pipe(gulp.dest(Yoopies.jsWebPath));
+        .pipe(gulp.dest(Hobbiz.jsWebPath));
 });
 
 /** Default task to run if we're running 'gulp' directly. Remember to use --env prod|dev to minify or not assets */
@@ -159,5 +127,5 @@ gulp.task('default', ['installAssets'], function() {
 
 /** Watch task only to run in development mode instead of 'php app/console assetic:watch' */
 gulp.task('watch', ['default'], function() {
-    gulp.watch(Yoopies.assetsAll+'/**/*', ['default']);
+    gulp.watch(Hobbiz.assetsAll+'/**/*', ['default']);
 });
