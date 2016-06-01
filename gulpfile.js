@@ -8,10 +8,12 @@ var Hobbiz = {
         'app/resources/lib/bootstrap/dist/css/bootstrap.css'
     ],
     jsVendorHeader: [
-        'bower_components/respond/dest/respond.min.js',
-        'app/Resources/public/js/modernizr.js'
     ],
     jsVendorFooter: [
+        'app/resources/lib/jquery/dist/jquery.js',
+        'app/resources/lib/jquery-migrate/dist/jquery-migrate.js',
+        'app/resources/lib/bootstrap/dist/js/bootstrap.js',
+        'app/resources/lib/vue/dist/vue.js'
     ],
     parametersPath: 'app/config/parameters.yml'
 };
