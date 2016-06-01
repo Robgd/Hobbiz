@@ -25,3 +25,10 @@
 # Bower #
 ########
 /bower_components/
+
+########
+# Front #
+########
+/app/Resources/Lib
+/web/css/
+/web/js/

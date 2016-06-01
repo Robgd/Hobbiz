@@ -1,0 +1,27 @@
+{
+  "name": "Hobbiz",
+  "version": "1.0.0",
+  "homepage": "https://github.com/Robgd/Hobbiz",
+  "authors": [
+    "Robin <godartrobin@gmail.com>"
+  ],
+  "description": "Hobbiz project",
+  "keywords": [
+    "Hobbiz"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "vue": "~1.0.20",
+    "bootstrap-tour": "~0.10.2",
+    "jquery": "~1.11.1",
+    "jquery-migrate": "~1.2.1",
+    "bootstrap": "~3.3"
+  }
+}
