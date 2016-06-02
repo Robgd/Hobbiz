@@ -7,6 +7,9 @@ var Hobbiz = {
     cssVendor: [
         'app/resources/lib/bootstrap/dist/css/bootstrap.css'
     ],
+    cssOrdered: [
+        'src/AppBundle/Resources/public/sass/**/*.scss'
+    ],
     jsVendorHeader: [
     ],
     jsVendorFooter: [
@@ -14,6 +17,8 @@ var Hobbiz = {
         'app/resources/lib/jquery-migrate/dist/jquery-migrate.js',
         'app/resources/lib/bootstrap/dist/js/bootstrap.js',
         'app/resources/lib/vue/dist/vue.js'
+    ],
+    jsOrdered: [
     ],
     parametersPath: 'app/config/parameters.yml'
 };
@@ -65,7 +70,7 @@ gulp.task('bower', ['bower:clean'], function() {
 gulp.task('stylesheet:main', function() {
     var config = readYml.sync(Hobbiz.parametersPath);
 
-    return gulp.src(Hobbiz.assetsAll+'/**/*.scss')
+    return gulp.src(Hobbiz.cssOrdered)
         .pipe(plumber())
         .pipe(sass())
         .pipe(gulpif(!isProduction, sourcemaps.init()))
@@ -91,43 +96,28 @@ gulp.task('stylesheet:vendor', function() {
 });
 
 /** Minify JS if we're running gulp with (--env prod) */
-gulp.task('javascript:main', function() {
-    return gulp.src(Hobbiz.jsMain)
-        .pipe(plumber())
-        .pipe(gulpif(!isProduction, sourcemaps.init()))
-        .pipe(concat('main.js'))
-        .pipe(gulpif(isProduction, uglify()))
-        .pipe(gulpif(!isProduction, sourcemaps.write('./')))
-        .pipe(gulp.dest(Hobbiz.jsWebPath));
-});
+gulp.task('javascript:main', jsGulpTask(Hobbiz.jsOrdered, 'main.js', Hobbiz.jsWebPath));
 
-gulp.task('javascript:vendorFooter', function() {
-    return gulp.src(Hobbiz.jsVendor)
-        .pipe(plumber())
-        .pipe(gulpif(!isProduction, sourcemaps.init()))
-        .pipe(concat('vendor-footer.js'))
-        .pipe(gulpif(isProduction, uglify()))
-        .pipe(gulpif(!isProduction, sourcemaps.write('./')))
-        .pipe(gulp.dest(Hobbiz.jsWebPath));
-});
+gulp.task('javascript:vendorHeader', jsGulpTask(Hobbiz.jsVendorHeader, 'vendor-header.js', Hobbiz.jsWebPath));
 
-gulp.task('javascript:vendorHeader', function() {
-    return gulp.src(Hobbiz.jsVendorHead)
-        .pipe(plumber())
-        .pipe(gulpif(!isProduction, sourcemaps.init()))
-        .pipe(concat('vendor-header.js'))
-        .pipe(gulpif(isProduction, uglify()))
-        .pipe(gulpif(!isProduction, sourcemaps.write('./')))
-        .pipe(gulp.dest(Hobbiz.jsWebPath));
-});
+gulp.task('javascript:vendorFooter', jsGulpTask(Hobbiz.jsVendorFooter, 'vendor-footer.js', Hobbiz.jsWebPath));
 
 /** Default task to run if we're running 'gulp' directly. Remember to use --env prod|dev to minify or not assets */
 gulp.task('default', ['installAssets'], function() {
-    // gulp.start('stylesheet', 'stylesheet:vendor', 'javascript', 'javascript:main', 'javascript:vendor', 'javascript:vendorhead');
-    gulp.start('stylesheet:vendor');
+    gulp.start('stylesheet:main', 'stylesheet:vendor', 'javascript:main', 'javascript:vendorHeader', 'javascript:vendorFooter');
 });
 
 /** Watch task only to run in development mode instead of 'php app/console assetic:watch' */
 gulp.task('watch', ['default'], function() {
     gulp.watch(Hobbiz.assetsAll+'/**/*', ['default']);
 });
+
+function jsGulpTask(src, fileName, dest) {
+    return gulp.src(src)
+        .pipe(plumber())
+        .pipe(gulpif(!isProduction, sourcemaps.init()))
+        .pipe(concat(fileName))
+        .pipe(gulpif(isProduction, uglify()))
+        .pipe(gulpif(!isProduction, sourcemaps.write('./')))
+        .pipe(gulp.dest(dest));
+}
