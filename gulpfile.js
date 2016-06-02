@@ -13,8 +13,6 @@ var Hobbiz = {
     jsVendorHeader: [
     ],
     jsVendorFooter: [
-        'app/resources/lib/jquery/dist/jquery.js',
-        'app/resources/lib/jquery-migrate/dist/jquery-migrate.js',
         'app/resources/lib/bootstrap/dist/js/bootstrap.js',
         'app/resources/lib/vue/dist/vue.js'
     ],
