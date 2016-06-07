@@ -7,7 +7,9 @@ php:
   - 7.0
 
 before_script:
+  - cp app/config/parameters.yml.travis app/config/parameters.yml
   - composer install --prefer-dist --dev
+  - php bin/console doctrine:database:create --env=test
 
 script:
   - phpunit --coverage-clover=coverage.clover
