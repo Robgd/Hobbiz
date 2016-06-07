@@ -1,8 +1,8 @@
-notifications:
-  slack: hobbiz:4OrqA0wjy4WJIfevRuBitodo
-
 services:
   - mysql
+
+before_install:
+  - mysql -e "create database IF NOT EXISTS test;" -uroot
 
 language: php
 php:
@@ -20,3 +20,6 @@ script:
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
   - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+
+notifications:
+  slack: hobbiz:4OrqA0wjy4WJIfevRuBitodo
