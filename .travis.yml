@@ -1,6 +1,9 @@
 notifications:
   slack: hobbiz:4OrqA0wjy4WJIfevRuBitodo
 
+services:
+  - mysql
+
 language: php
 php:
   - 5.6
