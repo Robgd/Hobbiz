@@ -1,0 +1,6 @@
+@import "./mixins.scss";
+
+body {
+  background: blue;
+  @include border-radius(3px);
+}

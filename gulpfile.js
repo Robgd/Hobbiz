@@ -1,6 +1,5 @@
 /** Store all variables dedicated to Hobbiz Project */
 var Hobbiz = {
-    assetsAll: 'src/AppBundle/Resources/public/sass',
     cssWebPath: 'web/css',
     jsWebPath: 'web/js',
     bowerComponentsPath: 'app/Resources/Lib/**',
@@ -17,8 +16,19 @@ var Hobbiz = {
         'app/resources/lib/vue/dist/vue.js'
     ],
     jsOrdered: [
+        'src/AppBundle/Resources/public/js/**/*.js'
     ],
     parametersPath: 'app/config/parameters.yml'
+};
+
+jsGulpTask = function(path, fileName, output) {
+    gulp.src(path)
+        .pipe(plumber())
+        .pipe(gulpif(!isProduction, sourcemaps.init()))
+        .pipe(concat(fileName))
+        .pipe(gulpif(isProduction, uglify()))
+        .pipe(gulpif(!isProduction, sourcemaps.write('./')))
+        .pipe(gulp.dest(output));
 };
 
 /**
@@ -109,13 +119,3 @@ gulp.task('default', ['installAssets'], function() {
 gulp.task('watch', ['default'], function() {
     gulp.watch(Hobbiz.assetsAll+'/**/*', ['default']);
 });
-
-function jsGulpTask(src, fileName, dest) {
-    return gulp.src(src)
-        .pipe(plumber())
-        .pipe(gulpif(!isProduction, sourcemaps.init()))
-        .pipe(concat(fileName))
-        .pipe(gulpif(isProduction, uglify()))
-        .pipe(gulpif(!isProduction, sourcemaps.write('./')))
-        .pipe(gulp.dest(dest));
-}
