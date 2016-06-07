@@ -7,7 +7,6 @@ php:
   - 7.0
 
 before_script:
-  - mysql -e 'create database hobbiz_test;'
   - cp app/config/parameters.yml.travis app/config/parameters.yml
   - composer install --prefer-dist --dev
   - php bin/console doctrine:database:create --env=test
