@@ -37,7 +37,7 @@ class RegistrationController extends FosRegistration
         /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
         $userManager = $this->container->get('fos_user.user_manager');
         /** @var $dispatcher \Symfony\Component\EventDispatcher\EventDispatcherInterface */
-        $dispatcher  = $this->container->get('event_dispatcher');
+        $dispatcher = $this->container->get('event_dispatcher');
 
         /** @var User $user */
         $user = $userManager->createUser();

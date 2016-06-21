@@ -21,14 +21,14 @@ class UserPhotoToNumberTransformer implements DataTransformerInterface
     /**
      * Transforms an object (UserPhoto) to an int (id).
      *
-     * @param  UserPhoto|null $userPhoto
+     * @param  int|string $userPhoto
      * 
      * @return int
      */
     public function transform($userPhoto)
     {
         if (null === $userPhoto) {
-            return "";
+            return '';
         }
 
         return $userPhoto->getId();
