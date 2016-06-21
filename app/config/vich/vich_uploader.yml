@@ -1,0 +1,11 @@
+vich_uploader:
+    db_driver: orm
+    storage:   gaufrette
+    mappings:
+        profile_photo:
+            uri_prefix:         /uploads/images/users
+            upload_destination: user_image_fs
+            namer:              vich_uploader.namer_uniqid
+            delete_on_remove:   true
+            delete_on_update:   true
+            inject_on_load:     true

@@ -17,3 +17,6 @@ parameters:
 
     # A secret key that's used to generate certain security-related tokens
     secret:            regrER65GXbyto572fh6vhJUDc302
+
+    # Gaufrette storage directory
+    user_adapter_directory: /uploads/images/users

@@ -1,0 +1,10 @@
+knp_gaufrette:
+    stream_wrapper: ~
+    adapters:
+        user_adapter:
+            local:
+                directory: '%kernel.root_dir%/../web/uploads/images/users'
+                create:    true
+    filesystems:
+        user_image_fs:
+            adapter: user_adapter

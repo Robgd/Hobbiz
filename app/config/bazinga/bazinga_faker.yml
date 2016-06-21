@@ -1,0 +1,3 @@
+bazinga_faker:
+    orm: doctrine
+    entities:

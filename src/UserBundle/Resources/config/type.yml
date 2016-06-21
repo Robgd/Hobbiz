@@ -1,0 +1,11 @@
+services:
+    # User
+    user.registration.type:
+        class: UserBundle\Form\Type\UserRegistrationType
+        arguments: ['@doctrine.orm.entity_manager']
+        tags:
+            - { name: form.type, alias: user_registration }
+    user_photo.type:
+        class: AppBundle\Form\Type\User\UserPhotoType
+        tags:
+            - { name: form.type, alias: user_photo_type }
